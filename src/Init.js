@@ -1,9 +1,10 @@
     $(document).ready(function() {
         var canvas = $('#bg');
         var tree = new TreeGenerator(canvas, {
-            indicateNewBranch: true,
+            // indicateNewBranch: true,
             fitScreen: true,
-            fadeOut: false
+            fadeOut: false,
+            spawnInterval: 10
         });
         var image = new Image();
         image.src = "assets/shelby.jpg";

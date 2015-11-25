@@ -52,13 +52,15 @@ var TreeGenerator = function(canvas, opts) {
 	 * @return {void}
 	 */
 	tg.start = function(image) {
-		tg.image = image;
-		var yPos = canvas.HEIGHT - tg.image.height;
-		canvas.ctx.drawImage(tg.image, 0, 0, canvas.WIDTH, canvas.HEIGHT);
-		tg.imageWidth = canvas.WIDTH;
-		tg.imageHeight = canvas.HEIGHT;
-		tg.imageData = canvas.ctx.getImageData(0, 0, tg.imageWidth, tg.imageHeight).data;
-		// Clear intervals
+		canvas.image = image;
+		var yPos = canvas.HEIGHT - canvas.image.height;
+		canvas.ctx.drawImage(canvas.image, 0, 0, canvas.WIDTH, canvas.HEIGHT);
+		canvas.imageWidth = canvas.WIDTH;
+		canvas.imageHeight = canvas.HEIGHT;
+		canvas.imageData = canvas.ctx.getImageData(0, 0, canvas.imageWidth, canvas.imageHeight).data;
+
+		canvas.ctx.fillStyle = rgbToFillStyle(0,0,0,1);
+		canvas.ctx.fillRect(0, 0, canvas.WIDTH, canvas.HEIGHT);
 		tg.stop();
 		// Check autoSpawn
 		if (tg.settings.autoSpawn) {
@@ -114,10 +116,12 @@ var TreeGenerator = function(canvas, opts) {
 		if (w < 6 && y > canvas.HEIGHT - Math.random() * (0.3 * canvas.HEIGHT)) w = w * 0.8;
 		// Draw the next segment of the branch
 		// canvas.ctx.strokeStyle = branchColor || tg.settings.treeColor;
-		var red = tg.imageData[((tg.imageWidth * y) + x) * 4];
-		var green = tg.imageData[((tg.imageWidth * y) + x) * 4 + 1];
-		var blue = tg.imageData[((tg.imageWidth * y) + x) * 4 + 2];
-		var alpha = tg.imageData[((tg.imageWidth * y) + x) * 4 + 3];
+		x = Math.floor(x);
+		y = Math.floor(y);
+		var red = canvas.imageData[((canvas.imageWidth * y) + x) * 4];
+		var green = canvas.imageData[((canvas.imageWidth * y) + x) * 4 + 1];
+		var blue = canvas.imageData[((canvas.imageWidth * y) + x) * 4 + 2];
+		var alpha = canvas.imageData[((canvas.imageWidth * y) + x) * 4 + 3];
 		canvas.ctx.strokeStyle = rgbToFillStyle(red, green, blue, alpha);
 		console.log(red)
 
@@ -140,7 +144,7 @@ var TreeGenerator = function(canvas, opts) {
 		if (w - lifetime * tg.settings.loss >= 1) {
 			setTimeout(function() {
 				branch(x, y, dx, dy, w, growthRate, ++lifetime, branchColor);
-			}, growthRate).bind(this);
+			}, growthRate);
 		}
 	}
 
@@ -180,6 +184,7 @@ var TreeGenerator = function(canvas, opts) {
 		canvas.ctx.fillStyle = rgbToFillStyle(tg.settings.bgColor[0], tg.settings.bgColor[1], tg.settings.bgColor[2], tg.settings.fadeAmount);
 		canvas.ctx.fillRect(0, 0, canvas.WIDTH, canvas.HEIGHT);
 	}
+
 
 	/**
 	 * Resize the canvas to the window size
