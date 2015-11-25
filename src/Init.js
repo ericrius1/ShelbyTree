@@ -2,7 +2,8 @@
         var canvas = $('#bg');
         var tree = new TreeGenerator(canvas, {
             indicateNewBranch: true,
-            fitScreen: true
+            fitScreen: true,
+            fadeOut: false
         });
         var image = new Image();
         image.src = "assets/shelby.jpg";

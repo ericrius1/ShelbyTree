@@ -1,5 +1,4 @@
-
-var TreeGenerator = function (canvas, opts) {
+var TreeGenerator = function(canvas, opts) {
 	var tg = {};
 
 
@@ -52,22 +51,25 @@ var TreeGenerator = function (canvas, opts) {
 	 * @param  {int} fadeInterval Fade interval
 	 * @return {void}
 	 */
-	tg.start = function (image) {
+	tg.start = function(image) {
 		tg.image = image;
 		var yPos = canvas.HEIGHT - tg.image.height;
 		canvas.ctx.drawImage(tg.image, 0, 0, canvas.WIDTH, canvas.HEIGHT);
+		tg.imageWidth = canvas.WIDTH;
+		tg.imageHeight = canvas.HEIGHT;
+		tg.imageData = canvas.ctx.getImageData(0, 0, tg.imageWidth, tg.imageHeight).data;
 		// Clear intervals
 		tg.stop();
 		// Check autoSpawn
 		if (tg.settings.autoSpawn) {
 			branch(canvas.WIDTH / 2, canvas.HEIGHT, 0, -3, 10, 30, 0, tg.settings.treeColor);
-			intervals.generation = setInterval(function () {
+			intervals.generation = setInterval(function() {
 				branch((Math.random() * 4) * canvas.WIDTH / 4, canvas.HEIGHT, 0, -Math.random() * 3, 10 * Math.random(), 30, 0, newColor());
 			}, tg.settings.spawnInterval);
 		}
 		// Check autoFade
 		if (tg.settings.fadeOut) {
-			intervals.fading = setInterval(function () {
+			intervals.fading = setInterval(function() {
 				fade()
 			}, tg.settings.fadeInterval);
 		}
@@ -77,7 +79,7 @@ var TreeGenerator = function (canvas, opts) {
 	 * Stop generating trees
 	 * @return {void}
 	 */
-	tg.stop = function () {
+	tg.stop = function() {
 		clearInterval(intervals.generation);
 		clearInterval(intervals.fading);
 	};
@@ -111,13 +113,20 @@ var TreeGenerator = function (canvas, opts) {
 		// Check if branches are getting too low
 		if (w < 6 && y > canvas.HEIGHT - Math.random() * (0.3 * canvas.HEIGHT)) w = w * 0.8;
 		// Draw the next segment of the branch
-		canvas.ctx.strokeStyle = branchColor || tg.settings.treeColor;
+		// canvas.ctx.strokeStyle = branchColor || tg.settings.treeColor;
+		var red = tg.imageData[((tg.imageWidth * y) + x) * 4];
+		var green = tg.imageData[((tg.imageWidth * y) + x) * 4 + 1];
+		var blue = tg.imageData[((tg.imageWidth * y) + x) * 4 + 2];
+		var alpha = tg.imageData[((tg.imageWidth * y) + x) * 4 + 3];
+		canvas.ctx.strokeStyle = rgbToFillStyle(red, green, blue, alpha);
+		console.log(red)
+
 		canvas.ctx.lineTo(x, y);
 		canvas.ctx.stroke();
 		// Generate new branches
 		// they should spawn after a certain lifetime has been met, although depending on the width
 		if (lifetime > 5 * w + Math.random() * 100 && Math.random() > tg.settings.newBranch) {
-			setTimeout(function () {
+			setTimeout(function() {
 				// Indicate the birth of a new branch
 				if (tg.settings.indicateNewBranch) {
 					circle(x, y, w, 'rgba(255,0,0,0.4)');
@@ -128,9 +137,11 @@ var TreeGenerator = function (canvas, opts) {
 			}, 2 * growthRate * Math.random() + tg.settings.minSleep);
 		}
 		// Continue the branch
-		if (w - lifetime * tg.settings.loss >= 1) setTimeout(function () {
-			branch(x, y, dx, dy, w, growthRate, ++lifetime, branchColor);
-		}, growthRate);
+		if (w - lifetime * tg.settings.loss >= 1) {
+			setTimeout(function() {
+				branch(x, y, dx, dy, w, growthRate, ++lifetime, branchColor);
+			}, growthRate).bind(this);
+		}
 	}
 
 	// -------------------------------//
@@ -166,7 +177,7 @@ var TreeGenerator = function (canvas, opts) {
 	 */
 	function fade() {
 		if (!tg.settings.fadeOut) return true;
-		canvas.ctx.fillStyle = "rgba(" + tg.settings.bgColor[0] + "," + tg.settings.bgColor[1] + "," + tg.settings.bgColor[2] + "," + tg.settings.fadeAmount + ")";
+		canvas.ctx.fillStyle = rgbToFillStyle(tg.settings.bgColor[0], tg.settings.bgColor[1], tg.settings.bgColor[2], tg.settings.fadeAmount);
 		canvas.ctx.fillRect(0, 0, canvas.WIDTH, canvas.HEIGHT);
 	}
 
@@ -196,10 +207,10 @@ var TreeGenerator = function (canvas, opts) {
 	 * Resize the canvas to fit the screen
 	 * @return {void}
 	 */
-	tg.resizeCanvas = function () {
+	tg.resizeCanvas = function() {
 		console.log("RESIZE")
 		canvas.WIDTH = 768;
-		canvas.HEIGHT =1334;
+		canvas.HEIGHT = 1334;
 
 		canvas.$el.attr('width', canvas.WIDTH);
 		canvas.$el.attr('height', canvas.HEIGHT);
