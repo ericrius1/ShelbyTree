@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-
+<link rel="stylesheet" type="text/css" href="styles.css">
 	<title>Shelby- Growing Like a Tree</title>
 
 	<style type="text/css">
@@ -18,54 +18,13 @@
 
 <body>
 
-	<canvas width="100%" height="100%" id="bg" style="color:#09F"></canvas>
+	<canvas id="bg"></canvas>
 
 	<script src="lib/jquery.js"></script>
 	<script type="text/javascript" src="lib/dat.gui.js"></script>
-	<script type="text/javascript" src="src/TreeGenerator.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			var canvas = $('#bg');
-			var tree = new TreeGenerator(canvas, {
-				fitScreen: true
-			});
-			tree.start();
-
-			// Setup dat gui to control variables
-			var gui = new dat.GUI();
-			var f1 = gui.addFolder('Tree growth');
-				f1.add(tree.settings, 'loss', 0, 0.1);
-				f1.add(tree.settings, 'newBranch',0,1);
-				f1.add(tree.settings, 'branchLoss',0,1);
-				f1.add(tree.settings, 'mainLoss',0,1);
-				f1.add(tree.settings, 'initialWidth',1,50);
-			var autoMode = f1.add(tree.settings, 'autoSpawn');
-			var autoInterval = f1.add(tree.settings,'spawnInterval',0,1000);
-			var f2 = gui.addFolder('Visuals');
-				f2.add(tree.settings, 'minSleep',0,50);
-				f2.add(tree.settings, 'colorful');
-				f2.add(tree.settings, 'speed',0,1);
-				f2.add(tree.settings, 'fastMode');
-				f2.add(tree.settings, 'indicateNewBranch');
-			var f3 = gui.addFolder('Fading');
-				var fadeOut = f3.add(tree.settings, 'fadeOut');
-				f3.add(tree.settings, 'fadeAmount',0,0.3);
-
-			autoMode.onChange(function(val){
-				tree.start();
-			});
-
-			fadeOut.onChange(function(val){
-				tree.start();
-			});
-			
-			autoInterval.onFinishChange(function(){
-				tree.start();
-			});
-
-			gui.remember(tree);
-		});
-	</script>
+	<script type="text/javascript" src="src/Init.js"></script>
+	<script type="text/javascript" src="src/Main.js"></script>
+	<script>
 
 </body>
 </html>

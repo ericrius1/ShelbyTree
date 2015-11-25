@@ -2,6 +2,7 @@
 var TreeGenerator = function (canvas, opts) {
 	var tg = {};
 
+
 	// Default settings
 	tg.settings = {
 		loss: 0.03, // Width loss per cycle
@@ -51,7 +52,10 @@ var TreeGenerator = function (canvas, opts) {
 	 * @param  {int} fadeInterval Fade interval
 	 * @return {void}
 	 */
-	tg.start = function () {
+	tg.start = function (image) {
+		tg.image = image;
+		var yPos = canvas.HEIGHT - tg.image.height;
+		canvas.ctx.drawImage(tg.image, 0, 0, canvas.WIDTH, canvas.HEIGHT);
 		// Clear intervals
 		tg.stop();
 		// Check autoSpawn
@@ -193,8 +197,9 @@ var TreeGenerator = function (canvas, opts) {
 	 * @return {void}
 	 */
 	tg.resizeCanvas = function () {
-		canvas.WIDTH = window.innerWidth;
-		canvas.HEIGHT = window.innerHeight;
+		console.log("RESIZE")
+		canvas.WIDTH = 768;
+		canvas.HEIGHT =1334;
 
 		canvas.$el.attr('width', canvas.WIDTH);
 		canvas.$el.attr('height', canvas.HEIGHT);
