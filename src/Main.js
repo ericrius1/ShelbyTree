@@ -206,13 +206,6 @@ var TreeGenerator = function(canvas, opts) {
 	 * @param  {Object} e Event object
 	 * @return {void}
 	 */
-	function resizeCanvas(e) {
-		canvas.WIDTH = window.innerWidth;
-		canvas.HEIGHT = window.innerHeight;
-
-		canvas.$el.attr('width', canvas.WIDTH);
-		canvas.$el.attr('height', canvas.HEIGHT);
-	}
 
 	/**
 	 * Return a new color, depending on the colorful setting
@@ -228,8 +221,8 @@ var TreeGenerator = function(canvas, opts) {
 	 * @return {void}
 	 */
 	tg.resizeCanvas = function() {
-		canvas.WIDTH = 576;
-		canvas.HEIGHT = 1000.5;
+		canvas.HEIGHT = window.innerHeight;
+		canvas.WIDTH = Math.floor(canvas.HEIGHT * 0.5578);
 
 		canvas.$el.attr('width', canvas.WIDTH);
 		canvas.$el.attr('height', canvas.HEIGHT);
