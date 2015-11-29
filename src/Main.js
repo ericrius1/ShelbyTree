@@ -62,9 +62,10 @@ var TreeGenerator = function(canvas, opts) {
 		// add linear gradient
 		var grd = canvas.ctx.createLinearGradient(0, 0, 0, canvas.HEIGHT);
 		// light blue
-		grd.addColorStop(0, '#ea7300');
+		grd.addColorStop(0, '#17e5f2');
+		grd.addColorStop(0.7, '#d7544d');
 		// dark blue
-		grd.addColorStop(1, '#17e5f2');
+		grd.addColorStop(1, '#4dd754');
 		canvas.ctx.fillStyle = grd;
 		canvas.ctx.fillRect(0, 0, canvas.WIDTH, canvas.HEIGHT);
 		tg.stop();
@@ -132,7 +133,11 @@ var TreeGenerator = function(canvas, opts) {
 		if(Math.random() < 0.9) {
 		  canvas.ctx.strokeStyle = rgbToFillStyle(red, green, blue, alpha);	
 		} else {
-			canvas.ctx.strokeStyle = rgbToFillStyle(51, 22, 5, 200)
+
+			var red = 51 + Math.floor(Math.random() * 50);
+			var green = 2 + Math.floor(Math.random() * 30);
+			var blue = 5 + Math.floor(Math.random() * 30);
+			canvas.ctx.strokeStyle = rgbToFillStyle(red, green, blue, 200)
 		}
 
 		canvas.ctx.lineTo(x, y);

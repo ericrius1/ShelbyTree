@@ -4,8 +4,10 @@
             // indicateNewBranch: true,
             fitScreen: true,
             fadeOut: false,
+            minSleep: 100,
             // fadeAmount: 0.005,
-            spawnInterval: 100
+            spawnInterval: 100,
+            speed: .4
         });
         var image = new Image();
         image.src = "assets/shelby.jpg";
