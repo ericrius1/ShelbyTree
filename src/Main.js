@@ -21,7 +21,7 @@ var TreeGenerator = function(canvas, opts) {
 		indicateNewBranch: false, // Display a visual indicator when a new branch is born
 		fitScreen: false, // Resize canvas to fit screen,
 		treeColor: '#ffffff',
-		bgColor: [0, 0, 0]
+		bgColor: [200, 0, 0]
 	};
 
 	tg.settings = $.extend(tg.settings, opts);
@@ -59,7 +59,13 @@ var TreeGenerator = function(canvas, opts) {
 		canvas.imageHeight = canvas.HEIGHT;
 		canvas.imageData = canvas.ctx.getImageData(0, 0, canvas.imageWidth, canvas.imageHeight).data;
 
-		canvas.ctx.fillStyle = rgbToFillStyle(0,0,0,1);
+		// add linear gradient
+		var grd = canvas.ctx.createLinearGradient(0, 0, 0, canvas.HEIGHT);
+		// light blue
+		grd.addColorStop(0, '#ea7300');
+		// dark blue
+		grd.addColorStop(1, '#17e5f2');
+		canvas.ctx.fillStyle = grd;
 		canvas.ctx.fillRect(0, 0, canvas.WIDTH, canvas.HEIGHT);
 		tg.stop();
 		// Check autoSpawn
@@ -122,8 +128,12 @@ var TreeGenerator = function(canvas, opts) {
 		var green = canvas.imageData[((canvas.imageWidth * y) + x) * 4 + 1];
 		var blue = canvas.imageData[((canvas.imageWidth * y) + x) * 4 + 2];
 		var alpha = canvas.imageData[((canvas.imageWidth * y) + x) * 4 + 3];
-		canvas.ctx.strokeStyle = rgbToFillStyle(red, green, blue, alpha);
-		console.log(red)
+		var hue = rgbToHsl(red, green, blue);
+		if(Math.random() < 0.9) {
+		  canvas.ctx.strokeStyle = rgbToFillStyle(red, green, blue, alpha);	
+		} else {
+			canvas.ctx.strokeStyle = rgbToFillStyle(51, 22, 5, 200)
+		}
 
 		canvas.ctx.lineTo(x, y);
 		canvas.ctx.stroke();
@@ -213,9 +223,8 @@ var TreeGenerator = function(canvas, opts) {
 	 * @return {void}
 	 */
 	tg.resizeCanvas = function() {
-		console.log("RESIZE")
-		canvas.WIDTH = 768;
-		canvas.HEIGHT = 1334;
+		canvas.WIDTH = 576;
+		canvas.HEIGHT = 1000.5;
 
 		canvas.$el.attr('width', canvas.WIDTH);
 		canvas.$el.attr('height', canvas.HEIGHT);

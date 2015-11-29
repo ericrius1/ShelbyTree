@@ -1,6 +1,8 @@
 
 #bg {
-    width: 100%;
-     height: 100%;
-     color:#09f;
+    /*width: 100%;*/
+     /*height: 100%;*/
+     display: block;
+     color:#00b4ea;
+     margin: 0 auto;
 }
